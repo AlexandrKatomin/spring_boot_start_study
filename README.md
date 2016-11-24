@@ -1,0 +1,1 @@
+Проект для изучения возможностей java framework Spring на примере веб приложения с использованием spring-boot-starter
