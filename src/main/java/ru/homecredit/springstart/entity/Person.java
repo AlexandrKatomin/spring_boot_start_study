@@ -7,9 +7,10 @@ import lombok.Data;
  */
 @Data
 public class Person {
-    Long id;
-    String name;
-    Integer age;
-    String passport;
-    String phone;
+    public Long id;
+    public String name;
+    public Integer age;
+    public String passport;
+    public String phone;
+    public Person manager;
 }

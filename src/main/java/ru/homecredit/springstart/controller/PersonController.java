@@ -34,12 +34,12 @@ public class PersonController {
     }
 
     @PutMapping
-    public PersonDto update(@RequestBody PersonDto dto) {
+    public PersonDto update(@RequestBody PersonDto dto) throws Exception {
         return service.update(dto);
     }
 
     @DeleteMapping
-    public PersonDto delete(@RequestBody PersonDto dto) {
-        return service.delete(dto);
+    public void delete(@RequestBody PersonDto dto) {
+        service.delete(dto);
     }
 }

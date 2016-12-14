@@ -6,6 +6,8 @@ import ru.homecredit.springstart.dto.PersonDto;
 import ru.homecredit.springstart.entity.Person;
 import ru.homecredit.springstart.repository.PersonRepository;
 
+import java.util.Optional;
+
 /**
  * @author dima
  */
@@ -26,7 +28,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonDto update(PersonDto dto) {
+    public PersonDto update(PersonDto dto) throws Exception {
         return map(repository.merge(mapToEntity(dto)));
     }
 
@@ -46,9 +48,12 @@ public class PersonServiceImpl implements PersonService {
 
     public Person mapToEntity(PersonDto dto) {
         Person person = new Person();
-        person.setName(dto.getName());
-        person.setAge(dto.getAge());
-        person.setPassport(dto.getPassport());
+
+        Optional<PersonDto> dtoOptional = Optional.ofNullable(dto);
+        dtoOptional.flatMap(PersonDto::getNameO).ifPresent(person::setName);
+        dtoOptional.flatMap(PersonDto::getPasportO).ifPresent(person::setPassport);
+        dtoOptional.flatMap(PersonDto::getAgeO).ifPresent(person::setAge);
+
         return person;
     }
 }

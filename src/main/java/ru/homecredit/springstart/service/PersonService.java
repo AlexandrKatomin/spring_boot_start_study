@@ -10,7 +10,7 @@ public interface PersonService {
 
     void save(PersonDto dto);
 
-    PersonDto update(PersonDto dto);
+    PersonDto update(PersonDto dto) throws Exception;
 
     void delete(PersonDto dto);
 }
