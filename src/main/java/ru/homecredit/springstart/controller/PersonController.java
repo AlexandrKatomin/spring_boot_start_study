@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.homecredit.springstart.dto.PersonDto;
 import ru.homecredit.springstart.service.PersonService;
 
+import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
+
 /**
  * @author dima
  */
@@ -22,6 +28,13 @@ public class PersonController {
     @Autowired
     @Qualifier(value = "personServiceImpl")
     PersonService service;
+    List<PersonService> personServiceList;
+
+    @PostConstruct
+    public void executeService(Boolean isPlan) {
+//        personServiceList.stream().filter(r.isplan == isPlan).findFirst(r -> r.save());
+        Set<PersonService> r = personServiceList.stream().filter(r.isplan == isPlan).collect(toSet());
+    }
 
     @GetMapping
     public PersonDto read(Long id) {

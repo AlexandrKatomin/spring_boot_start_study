@@ -1,4 +1,4 @@
-server.port: 8181
+server.port: 8182
 prefix:
     stringProp1: propValue1
     stringProp2: propValue2

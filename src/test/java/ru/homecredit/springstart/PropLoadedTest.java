@@ -38,5 +38,6 @@ public class PropLoadedTest {
         assertThat(config.getListProp(), hasItems("listValue1", "listValue2"));
         assertThat(config.getMapProp(), allOf(hasEntry("key1", "mapValue1"),
                 hasEntry("key2", "mapValue2")));
+//        assertThrows();
     }
 }

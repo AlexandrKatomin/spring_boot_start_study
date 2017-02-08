@@ -1,5 +1,6 @@
 package ru.homecredit.springstart.repository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import ru.homecredit.springstart.entity.Person;
@@ -15,6 +16,7 @@ import static java.util.Optional.ofNullable;
 /**
  * @author dima
  */
+@Slf4j
 @Repository
 @Cacheable
 public class PersonRepository {
@@ -23,6 +25,7 @@ public class PersonRepository {
 
     @Cacheable
     public Person getOne(Long id) {
+        log.info(" get person from database with id = " + id);
         return persons.get(id);
     }
 
@@ -32,17 +35,20 @@ public class PersonRepository {
     }
 
     public Person merge(Person person) throws Exception {
-//        translate(person);
-
         return persons.values().stream()
                 .filter(getPersonByPasport(person).or(getPersonByName(person)))
                 .findFirst()
                 .map(p -> {
-                    BiConsumer<Function<Person, Integer>, BiConsumer<Person, Integer>> initInteger = (getter, setter) -> setIfNotPresent(getter, setter, person, p);
-                    BiConsumer<Function<Person, String>, BiConsumer<Person, String>> initString = (getter, setter) -> setIfNotPresent(getter, setter, person, p);
+                    BiConsumer<Function<Person, Integer>, BiConsumer<Person, Integer>> initInteger =
+                            (getter, setter) -> setIfNotPresent(getter, setter, person, p);
+                    BiConsumer<Function<Person, String>, BiConsumer<Person, String>> initString =
+                            (getter, setter) -> setIfNotPresent(getter, setter, person, p);
 
                     initInteger.accept(Person::getAge, Person::setAge);
                     initString.accept(Person::getName, Person::setName);
+                    setIfNotPresent(Person::getName, Person::setName, person, p);
+
+
 
                     setIfNotPresent(person.getPassport(), p.getPassport());
                     setIfNotPresent(person.getPhone(), p.getPhone());
@@ -65,7 +71,7 @@ public class PersonRepository {
              BiConsumer<T, ? super U> setter,
              T t, T t1) {
 
-        setter.accept(t1, (getter.apply(t) == null) ? getter.apply(t1) : getter.apply(t));
+        setter.accept(t1, getter.apply(ofNullable(t).orElse(t1)));
     }
 
     private <T> T setIfNotPresent(T t, T t1) {
@@ -84,9 +90,6 @@ public class PersonRepository {
         persons.values().stream()
                 .filter(getPersonByPasport(person).or(getPersonByName(person)))
                 .findFirst()
-                .map(p -> p.getManager())
-                .map(p -> p.getManager())
-                .map(p -> p.getName())
-                .ifPresent(p -> persons.remove(p));
+                .ifPresent(persons::remove);
     }
 }
